@@ -40,7 +40,7 @@ module.exports = new PassportLocalStrategy({
             const data = {
                 name: savedUser.username
             }
-
+            
             return done(null, token, data)
         })
         .catch(error => {

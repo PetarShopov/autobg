@@ -5,8 +5,7 @@ const REQUIRED_VALIDATION_MESSAGE = '{PATH} is required'
 
 let userSchema = new mongoose.Schema({
   username: { type: String, required: REQUIRED_VALIDATION_MESSAGE, unique: true },
-  firstName: { type: String, required: REQUIRED_VALIDATION_MESSAGE },
-  lastName: { type: String, required: REQUIRED_VALIDATION_MESSAGE },
+  name: { type: String, required: REQUIRED_VALIDATION_MESSAGE },
   salt: String,
   hashedPass: String,
   roles: [String]
@@ -30,8 +29,7 @@ module.exports.seedAdminUser = () => {
 
     User.create({
       username: 'Admin',
-      firstName: 'Admin',
-      lastName: 'Admin',
+      name: 'Admin',
       salt: salt,
       hashedPass: hashedPass,
       roles: ['Admin']

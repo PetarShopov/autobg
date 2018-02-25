@@ -12,7 +12,7 @@ module.exports = new PassportLocalStrategy({
     // Add validations!
     let salt = encryption.generateSalt()
     let hashedPassword = encryption.generateHashedPassword(salt, reqUser.password)
-
+    
     User.findOne({ 'username': username })
         .then(existingUser => {
             if (existingUser) {
@@ -21,8 +21,7 @@ module.exports = new PassportLocalStrategy({
 
             User.create({
                 username: username,
-                firstName: reqUser.firstName,
-                lastName: reqUser.lastName,
+                name: reqUser.name,
                 salt: salt,
                 hashedPass: hashedPassword
             })

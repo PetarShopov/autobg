@@ -14,8 +14,8 @@ module.exports = (app) => {
 					.find({})
 					.then(cars => {
 						res.status(200).json({
-							cars,
-							users
+							cars: cars.length,
+							users: users.length
 						})
 					})
 					.catch(err => {
@@ -104,7 +104,7 @@ module.exports = (app) => {
 			})
 	})
 
-	app.post('/cars/like', (req, res) => {
+	app.post('/cars/like/:id', (req, res) => {
 		const id = req.params.id
 
 		Car.findById(id)
@@ -178,7 +178,7 @@ module.exports = (app) => {
 			})
 	})
 
-	app.get('/cars/review', (req, res) => {
+	app.get('/cars/review/:id', (req, res) => {
 		const id = req.params.id
 
 		Car.findById(id)
@@ -187,7 +187,7 @@ module.exports = (app) => {
 					.sort((a, b) => b.createdOn - a.createdOn)
 					.slice(0)
 
-				res.status(200).json(car)
+				res.status(200).json(reviews)
 			})
 			.catch(err => {
 				let message = errorHandler.handleMongooseError(err)
