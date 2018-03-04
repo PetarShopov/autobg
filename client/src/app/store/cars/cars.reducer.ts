@@ -9,7 +9,7 @@ function addCar(state, action) {
     const result = action.result;
     return Object.assign({}, state, {
         carAdded: result.success,
-        carAddedId: result.success ? result.car.id : null
+        carAddedId: result.success ? result.car._id : null
     })
 }
 
@@ -26,10 +26,10 @@ function carDetails(state, action) {
 }
 
 function carLike(state, action) {
-    if (action.result.success) {
-        const currentCarLikes = state.carDetails.likes;
+    if (action.result.success && action.result.message === 'Car was liked!') {
+        const currentCarLikes = action.result.car.likes
         const carDetails = Object.assign({}, state.carDetails, {
-            likes: currentCarLikes + 1
+            likes: currentCarLikes
         })
 
         return Object.assign({}, state, {
@@ -43,7 +43,7 @@ function carLike(state, action) {
 function addReview(state, action) {
     const result = action.result;
     if (result.success) {
-        const review = result.review;
+        const review = JSON.stringify(result.review);
         const carReviews = state.carReviews;
 
         return Object.assign({}, state, {
@@ -63,13 +63,13 @@ function carDelete(state, action) {
     const result = action.result;
     if (result.success) {
         const id = action.id;
-        const carIndex = state.myCars.findIndex(c => c.id === id)
+        const carIndex = state.myCars.cars.findIndex(c => c._id === id)
 
         if (carIndex >= 0) {
-            const myCars = state.myCars.slice(0);
+            const myCars = state.myCars.cars.slice(0);
             myCars.splice(carIndex, 1)
             return Object.assign({}, state, {
-                myCars
+                myCars: {cars: myCars}
             })
         }
     }

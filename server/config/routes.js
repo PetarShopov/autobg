@@ -47,8 +47,8 @@ module.exports = (app) => {
 			image: carReq.image || 'No Image',
 			createdOn: +Date.now(),
 			createdBy: carReq.createdBy || 'No Created By',
-			likes: carReq.likes || ['No Likes'],
-			reviews: carReq.reviews || ['No Reviews'],
+			likes: carReq.likes || [],
+			reviews: carReq.reviews || [],
 			timestamp: +Date.now()
 		})
 			.then(car => {
@@ -69,6 +69,7 @@ module.exports = (app) => {
 
 	app.get('/cars/all', (req, res) => {
 		const page = parseInt(req.query.page) || 1
+		const searchText = req.query.search || ''
 		const pageSize = 6
 
 		let startIndex = (page - 1) * pageSize
@@ -76,6 +77,11 @@ module.exports = (app) => {
 
 		Car.find({})
 			.then(cars => {
+				if (searchText) {
+					cars = cars.filter(function(item) {
+						return item.make.includes(searchText)
+					})
+				}
 				cars = cars.slice(startIndex, endIndex)
 				res.status(200).json({ cars })
 			})
@@ -104,12 +110,13 @@ module.exports = (app) => {
 			})
 	})
 
-	app.post('/cars/like/:id', (req, res) => {
-		const id = req.params.id
+	app.post('/cars/like', (req, res) => {
+		const id = req.body.id
+		const user = req.body.user
 
 		Car.findById(id)
 			.then(car => {
-				if (!car.likes.indexOf(car.createdBy) >= 0) {
+				if (!(car.likes.indexOf(user) >= 0)) {
 					car.likes.push(user)
 					car.save(function (err) {
 						if (err) {
@@ -119,10 +126,17 @@ module.exports = (app) => {
 								message: message
 							})
 						}
-						res.status(200).json(car)
+						res.status(200).json({
+							success: true,
+							message: "Car was liked!",
+							car
+						})
 					})
 				} else {
-					res.status(200).json("Car was already liked by this user!")
+					res.status(200).json({
+						success: true,
+						message: "Car was already liked by this user!"
+					})
 				}
 			})
 			.catch(err => {
@@ -135,10 +149,10 @@ module.exports = (app) => {
 	})
 
 	app.post('/cars/review', (req, res) => {
-		const id = req.params.id
-		const user = req.user.name
-		let rating = req.body.rating
-		const comment = req.body.comment
+		const id = req.body.id
+		const user = req.body.user
+		let rating = req.body.review.rating
+		const comment = req.body.review.comment
 		if (rating) {
 			rating = parseInt(rating)
 		}
@@ -148,7 +162,7 @@ module.exports = (app) => {
 				message: 'Rating must be between 1 and 5.'
 			})
 		}
-		const review = {
+		var review = {
 			rating,
 			comment,
 			user,
@@ -157,7 +171,8 @@ module.exports = (app) => {
 
 		Car.findById(id)
 			.then(car => {
-				car.reviews.push(review)
+				car.reviews.push(JSON.stringify(review))
+
 				car.save(function (err) {
 					if (err) {
 						let message = errorHandler.handleMongooseError(err)
@@ -166,7 +181,12 @@ module.exports = (app) => {
 							message: message
 						})
 					}
-					res.status(200).json(car)
+					res.status(200).json({
+						success: true,
+						message: "Review was added!",
+						car,
+						review
+					})
 				})
 			})
 			.catch(err => {
@@ -235,8 +255,8 @@ module.exports = (app) => {
 			.then(output => {
 				res.status(200).json({
 					success: true,
-					message: 'Recipe deleted successfully.',
-					output
+					message: 'Car was deleted successfully.',
+					result: output
 				})
 			})
 			.catch(err => {
@@ -289,9 +309,9 @@ module.exports = (app) => {
 		})(req, res)
 	})
 
-	app.get('/mine', (req, res) => {
-		const user = req.user.email
-		
+	app.get('/mine/:id', (req, res) => {
+		const user = req.params.id
+
 		Car.find({ createdBy: user })
 			.then(cars => {
 				res.status(200).json({ cars })

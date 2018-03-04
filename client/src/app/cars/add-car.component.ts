@@ -32,7 +32,7 @@ export class AddCarComponent {
                 if (cars.carAdded) {
                     const carId = cars.carAddedId;
                     subscription.unsubscribe();
-                    this.router.navigateByUrl(`/cars/details/${carId}`)
+                    this.router.navigateByUrl(`/cars/${carId}`)
                 }
             })
     }

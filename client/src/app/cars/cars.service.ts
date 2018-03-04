@@ -22,22 +22,22 @@ export class CarsService {
         return this.httpService.get(`cars/${id}`, true)
     }
 
-    like(id) {
-        return this.httpService.post(`cars/like/${id}`, true)
+    like(id, user) {
+        return this.httpService.post(`cars/like`, {user, id}, true)
     }
 
     allReviews(id) {
         return this.httpService.get(`cars/review/${id}`, true)
     }
 
-    submitReview(id, review) {
-        return this.httpService.post(`cars/details/${id}/reviews/create`,
-            review,
+    submitReview(id, review, user) {
+        return this.httpService.post(`cars/review`,
+            {id, review, user},
             true)
     }
 
-    mine() {
-        return this.httpService.get('cars/mine', true)
+    mine(user) {
+        return this.httpService.get(`mine/${user}`, true)
     }
 
     delete(id) {

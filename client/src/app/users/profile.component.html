@@ -2,7 +2,7 @@
 
 <div>
     <div *ngFor="let car of cars">
-        {{cars.make}}  {{car.model}} 
-        <button (click)="delete(car.id)">Delete</button>
+        {{car.make}}  {{car.model}} 
+        <button (click)="delete(car._id)">Delete {{car._id}}</button>
     </div>
 </div>

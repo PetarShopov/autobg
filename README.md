@@ -1,2 +1,2 @@
 # autobg
-Angular5 / Node.js / Redux App
+Angular5 / Node.js / Express.js / MongoDB / Redux App

@@ -53,7 +53,7 @@ export class ListCarsComponent implements OnInit {
     }
 
     nextPage() {
-        if (this.cars.length === 0 || this.cars.length < 10) {
+        if (this.cars.length === 0 || this.cars.length < 6) {
             return;
         }
 

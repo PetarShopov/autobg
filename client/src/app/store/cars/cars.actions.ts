@@ -54,9 +54,9 @@ export class CarsActions {
             });
     }
 
-    like(id) {
+    like(id, user) {
         this.carsService
-            .like(id)
+            .like(id, user)
             .subscribe(result => {
                 this.ngRedux.dispatch({
                     type: CAR_LIKE,
@@ -65,9 +65,9 @@ export class CarsActions {
             })
     }
 
-    mine() {
+    mine(user) {
         this.carsService
-            .mine()
+            .mine(user)
             .subscribe(cars => {
                 this.ngRedux.dispatch({
                     type: MINE_CARS,
@@ -87,9 +87,9 @@ export class CarsActions {
             })
     }
 
-    submitReview(id, review) {
+    submitReview(id, review, user) {
         this.carsService
-            .submitReview(id, review)
+            .submitReview(id, review, user)
             .subscribe(result => {
                 this.ngRedux.dispatch({
                     type: CAR_ADD_REVIEW,

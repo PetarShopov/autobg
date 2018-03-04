@@ -3,7 +3,7 @@
     <button (click)="like()">Like this car!</button>
 </h1>
 <div>
-    <h2>{{car.make}} {{car.model}} - {{car.likes}} Likes</h2>
+    <h2>{{car.make}} {{car.model}} - {{likesCount}} Likes</h2>
     <img *ngIf="car.image" [src]="car.image" alt="No Photo" style="width:200px">
 </div>
 <div>
